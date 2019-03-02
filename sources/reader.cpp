@@ -484,37 +484,40 @@ void ReaderPrivate::removeExtraSymbols(QStringList& elements,
     const QString doubleTextDelim = textDelimiter + textDelimiter;
     for (int i = 0; i < elements.size(); ++i)
     {
-        QStringRef str(&elements.at(i));
-        if (str.isEmpty())
+        if (elements[i].isEmpty())
         {
             continue;
         }
 
-        int startPos = 0, endPos = str.size() - 1;
+        int startPos = 0, endPos = elements[i].size() - 1;
 
-        // Find first non-space char
-        for (;
-             startPos < str.size() &&
-                 str.at(startPos).category() == QChar::Separator_Space;
-             ++startPos);
+        {
+            QStringRef str(&elements[i]);
 
-        // Find last non-space char
-        for (;
-             endPos >= 0 &&
-                 str.at(endPos).category() == QChar::Separator_Space;
-             --endPos);
+            // Find first non-space char
+            for (;
+                 startPos < str.size() &&
+                     str.at(startPos).category() == QChar::Separator_Space;
+                 ++startPos);
+
+            // Find last non-space char
+            for (;
+                 endPos >= 0 &&
+                     str.at(endPos).category() == QChar::Separator_Space;
+                 --endPos);
+        }
 
         if (false == textDelimiter.isEmpty())
         {
             // Skip text delimiter symbol if element starts with it
-            QStringRef strStart(&elements.at(i), startPos, textDelimiter.size());
+            QStringRef strStart(&elements[i], startPos, textDelimiter.size());
             if ( strStart == textDelimiter)
             {
                 startPos += textDelimiter.size();
             }
 
             // Skip text delimiter symbol if element ends with it
-            QStringRef strEnd(&elements.at(i), endPos - textDelimiter.size() + 1,
+            QStringRef strEnd(&elements[i], endPos - textDelimiter.size() + 1,
                               textDelimiter.size());
             if (strEnd == textDelimiter)
             {
@@ -522,7 +525,7 @@ void ReaderPrivate::removeExtraSymbols(QStringList& elements,
             }
         }
 
-        if ( (0 < startPos || endPos < str.size() - 1) &&
+        if ( (0 < startPos || endPos < elements[i].size() - 1) &&
              startPos <= endPos)
         {
             elements[i] = elements[i].mid(startPos, endPos - startPos + 1);
