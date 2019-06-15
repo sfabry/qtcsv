@@ -385,7 +385,7 @@ void TestReader::testReadFileWorldCitiesPop()
     qDebug() << "Elapsed time:" << timer.elapsed() << "ms";
 
     QVERIFY2(false == data.isEmpty(), "Failed to read file content");
-    QVERIFY2(3173959 == data.size(), "Wrong number of rows");
+    QVERIFY2(2797246 == data.size(), "Wrong number of rows");
 }
 
 void TestReader::testReadFileWithEmptyFields()

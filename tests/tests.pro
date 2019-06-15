@@ -44,29 +44,36 @@ DISTFILES += \
     CMakeLists.txt
 
 !equals(PWD, $$OUT_PWD){
-    # Copy 'data' folder with test files to the destination directory
     win32 {
         COPY_FROM_PATH=$$shell_path($$PWD/data)
         COPY_TO_PATH=$$shell_path($$OUT_PWD/data)
-
-        # on windows we should create "/data" directory before coping of files
-        createdir.commands = $(MKDIR) $$COPY_TO_PATH
-        first.depends = $(first) createdir
     }
     else {
         COPY_FROM_PATH=$$PWD/data
         COPY_TO_PATH=$$OUT_PWD
     }
 
-    copydata.commands = $(COPY_DIR) $$COPY_FROM_PATH $$COPY_TO_PATH
-    first.depends = $(first) copydata
+    prepare_test_files.target = prepare_test_files
+    prepare_test_files.depends = createdir copydata unzip_wcp
 
-    export(first.depends)
-    win32: export(createdir.commands)
-    export(copydata.commands)
+    # Create 'data' dir in output folder
+    createdir.commands = @echo "Going to create $$COPY_TO_PATH" && $(MKDIR) $$COPY_TO_PATH
 
-    win32: QMAKE_EXTRA_TARGETS += first createdir copydata
-    else: QMAKE_EXTRA_TARGETS += first copydata
+    # Copy 'data' folder with test files to the destination directory
+    copydata.commands = @echo "Going to copy test files" && $(COPY_DIR) $$COPY_FROM_PATH $$COPY_TO_PATH
+
+    # Unzip test archives
+    WCP_ZIP=worldcitiespop.zip
+    win32 {
+        # TODO: unzip archive on windows
+        #unzip_wcp.commands = Expand-Archive -LiteralPath $$COPY_TO_PATH\\$$WCP_ZIP -DestinationPath $$COPY_TO_PATH
+        unzip_wcp.commands = @echo "Skipping unzipping of $$WCP_ZIP"
+    }
+    else {
+        unzip_wcp.commands = unzip $$COPY_TO_PATH/data/$$WCP_ZIP -d $$COPY_TO_PATH/data
+    }
+
+    QMAKE_EXTRA_TARGETS += prepare_test_files createdir copydata unzip_wcp
 }
 
 message(=== Configuration of qtcsv_tests ===)
