@@ -53,31 +53,31 @@ matrix:
     env:
      - QT_BASE=55 USE_CMAKE=true
   - os: linux
-    dist: trusty
+    dist: xenial
     sudo: required
     compiler: gcc
     env:
      - QT_BASE=56 USE_CMAKE=true
   - os: linux
-    dist: trusty
+    dist: xenial
     sudo: required
     compiler: gcc
     env:
      - QT_BASE=57 USE_CMAKE=true
   - os: linux
-    dist: trusty
+    dist: xenial
     sudo: required
     compiler: gcc
     env:
      - QT_BASE=58 USE_CMAKE=true
   - os: linux
-    dist: trusty
+    dist: xenial
     sudo: required
     compiler: gcc
     env:
      - QT_BASE=59 USE_CMAKE=true
   - os: linux
-    dist: trusty
+    dist: xenial
     sudo: required
     compiler: gcc
     env:
@@ -86,20 +86,25 @@ matrix:
     dist: xenial
     compiler: gcc
     env:
-     - QT_BASE=511
+     - QT_BASE=511 USE_CMAKE=true
   - os: linux
     dist: xenial
     compiler: gcc
     env:
-     - QT_BASE=511 USE_CMAKE=true
+     - QT_BASE=512
+  - os: linux
+    dist: xenial
+    compiler: gcc
+    env:
+     - QT_BASE=512 USE_CMAKE=true
   - os: osx
     compiler: clang
     env:
-     - QT_BASE=511
+     - QT_BASE=512
   - os: osx
     compiler: clang
     env:
-     - QT_BASE=511 USE_CMAKE=true
+     - QT_BASE=512 USE_CMAKE=true
 
 before_install:
   - if [[ "$QT_BASE" = "48" && "$TRAVIS_OS_NAME" = "linux" ]]; then sudo add-apt-repository ppa:beineri/opt-qt487-trusty -y; fi
@@ -108,12 +113,13 @@ before_install:
   - if [ "$QT_BASE" = "53" ]; then sudo add-apt-repository ppa:beineri/opt-qt532-trusty -y; fi
   - if [ "$QT_BASE" = "54" ]; then sudo add-apt-repository ppa:beineri/opt-qt542-trusty -y; fi
   - if [ "$QT_BASE" = "55" ]; then sudo add-apt-repository ppa:beineri/opt-qt551-trusty -y; fi
-  - if [ "$QT_BASE" = "56" ]; then sudo add-apt-repository ppa:beineri/opt-qt563-trusty -y; fi
-  - if [ "$QT_BASE" = "57" ]; then sudo add-apt-repository ppa:beineri/opt-qt571-trusty -y; fi
-  - if [ "$QT_BASE" = "58" ]; then sudo add-apt-repository ppa:beineri/opt-qt58-trusty -y; fi
-  - if [ "$QT_BASE" = "59" ]; then sudo add-apt-repository ppa:beineri/opt-qt595-trusty -y; fi
-  - if [ "$QT_BASE" = "510" ]; then sudo add-apt-repository ppa:beineri/opt-qt-5.10.1-trusty -y; fi
-  - if [[ "$QT_BASE" = "511" && "$TRAVIS_OS_NAME" = "linux" ]]; then sudo add-apt-repository ppa:beineri/opt-qt-5.11.2-xenial -y; fi
+  - if [ "$QT_BASE" = "56" ]; then sudo add-apt-repository ppa:beineri/opt-qt563-xenial -y; fi
+  - if [ "$QT_BASE" = "57" ]; then sudo add-apt-repository ppa:beineri/opt-qt571-xenial -y; fi
+  - if [ "$QT_BASE" = "58" ]; then sudo add-apt-repository ppa:beineri/opt-qt58-xenial -y; fi
+  - if [ "$QT_BASE" = "59" ]; then sudo add-apt-repository ppa:beineri/opt-qt597-xenial -y; fi
+  - if [ "$QT_BASE" = "510" ]; then sudo add-apt-repository ppa:beineri/opt-qt-5.10.1-xenial -y; fi
+  - if [ "$QT_BASE" = "511" ]; then sudo add-apt-repository ppa:beineri/opt-qt-5.11.3-xenial -y; fi
+  - if [[ "$QT_BASE" = "512" && "$TRAVIS_OS_NAME" = "linux" ]]; then sudo add-apt-repository ppa:beineri/opt-qt-5.12.3-xenial -y; fi
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then
       sudo apt-get update -qq;
     else
@@ -143,9 +149,10 @@ install:
   - if [ "$QT_BASE" = "58" ]; then sudo apt-get install -qq qt58base; source /opt/qt58/bin/qt58-env.sh; fi
   - if [ "$QT_BASE" = "59" ]; then sudo apt-get install -qq qt59base; source /opt/qt59/bin/qt59-env.sh; fi
   - if [ "$QT_BASE" = "510" ]; then sudo apt-get install -qq qt510base; source /opt/qt510/bin/qt510-env.sh; fi
-  - if [ "$QT_BASE" = "511" ]; then
+  - if [ "$QT_BASE" = "511" ]; then sudo apt-get install -qq qt511base; source /opt/qt511/bin/qt511-env.sh; fi
+  - if [ "$QT_BASE" = "512" ]; then
       if [ "$TRAVIS_OS_NAME" = "linux" ]; then
-        sudo apt-get install -qq qt511base; source /opt/qt511/bin/qt511-env.sh;
+        sudo apt-get install -qq qt512base; source /opt/qt512/bin/qt512-env.sh;
       else
         brew install qt;
         brew link --force qt;
@@ -179,12 +186,8 @@ script:
       mkdir ./tests && cd ./tests;
       qmake ../../tests/tests.pro CONFIG+=release LIBS+=-L../;
       make;
+      make prepare_test_files;
     fi
-
-  # download test file
-  #- wget -O worldcitiespop.txt.gz https://raw.github.com/apache/commons-csv/master/src/test/resources/perf/worldcitiespop.txt.gz
-  #- gunzip worldcitiespop.txt.gz
-  #- mv ./worldcitiespop.txt ./data
 
   # run tests
   - export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PWD/../
