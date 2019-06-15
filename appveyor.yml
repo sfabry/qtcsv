@@ -6,46 +6,36 @@ init:
 environment:
   matrix:
   - QT5: C:\Qt\5.3\mingw482_32
-    #MINGW: C:\Qt\Tools\mingw482_32
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2013
     use_cmake: "false"
   #- QT5: C:\Qt\5.3\mingw482_32
   #  MINGW: C:\Qt\Tools\mingw482_32
   #  use_cmake: "true"
   - QT5: C:\Qt\5.4\mingw491_32
-    #MINGW: C:\Qt\Tools\mingw491_32
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2013
     use_cmake: "false"
   - QT5: C:\Qt\5.5\mingw492_32
-    #MINGW: C:\Qt\Tools\mingw492_32
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2013
     use_cmake: "false"
   - QT5: C:\Qt\5.6.3\mingw49_32
-    #MINGW: C:\Qt\Tools\mingw530_32
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
     use_cmake: "false"
   - QT5: C:\Qt\5.7\mingw53_32
-    #MINGW: C:\Qt\Tools\mingw530_32
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2013
     use_cmake: "false"
   - QT5: C:\Qt\5.8\mingw53_32
-    #MINGW: C:\Qt\Tools\mingw530_32
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2013
     use_cmake: "false"
   - QT5: C:\Qt\5.9.7\mingw53_32
-    #MINGW: C:\Qt\Tools\mingw530_32
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
     use_cmake: "false"
   - QT5: C:\Qt\5.10.1\mingw53_32
-    #MINGW: C:\Qt\Tools\mingw530_32
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
     use_cmake: "false"
   - QT5: C:\Qt\5.11.3\mingw53_32
-    #MINGW: C:\Qt\Tools\mingw530_32
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
     use_cmake: "false"
   - QT5: C:\Qt\5.12.2\mingw73_32
-    #MINGW: C:\Qt\Tools\mingw530_32
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
     use_cmake: "false"
 
@@ -68,13 +58,13 @@ build_script:
     cd .\tests)
   else (
     qmake -v &&
-    qmake ..\qtcsv.pro CONFIG+=release DESTDIR=%cd% &&
+    qmake ..\qtcsv.pro CONFIG+=release DESTDIR=$PWD &&
     mingw32-make &&
     dir /s &&
     mkdir .\tests &&
     cd .\tests &&
     copy ..\*qtcsv.dll .\ &&
-    qmake ..\..\tests\tests.pro CONFIG+=release DESTDIR=%cd%\tests &&
+    qmake ..\..\tests\tests.pro CONFIG+=release DESTDIR=$PWD &&
     mingw32-make &&
     mingw32-make prepare_test_files)
 
