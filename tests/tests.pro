@@ -46,7 +46,7 @@ DISTFILES += \
 !equals(PWD, $$OUT_PWD){
     win32 {
         COPY_FROM_PATH=$$shell_path($$PWD/data)
-        COPY_TO_PATH=$$shell_path($$OUT_PWD/data)
+        COPY_TO_PATH=$$shell_path($$OUT_PWD)
     }
     else {
         COPY_FROM_PATH=$$PWD/data
