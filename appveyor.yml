@@ -58,13 +58,13 @@ build_script:
     cd .\tests)
   else (
     qmake -v &&
-    qmake ..\qtcsv.pro CONFIG+=release DESTDIR=$PWD &&
+    qmake ..\qtcsv.pro CONFIG+=release DESTDIR=%PWD% &&
     mingw32-make &&
     dir /s &&
     mkdir .\tests &&
     cd .\tests &&
     copy ..\*qtcsv.dll .\ &&
-    qmake ..\..\tests\tests.pro CONFIG+=release DESTDIR=$PWD &&
+    qmake ..\..\tests\tests.pro CONFIG+=release DESTDIR=%PWD% &&
     mingw32-make &&
     mingw32-make prepare_test_files)
 
